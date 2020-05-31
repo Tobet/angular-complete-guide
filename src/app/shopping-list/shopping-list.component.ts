@@ -1,36 +1,28 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {Ingredient} from '../shared/ingrediente.model';
+import {ShoppingListService} from './shopping-list.service';
 
 @Component({
     selector: 'app-shopping-list',
     templateUrl: './shopping-list.component.html',
-    styleUrls: ['./shopping-list.component.css']
+    styleUrls: ['./shopping-list.component.css'],
 })
-export class ShoppingListComponent {
+export class ShoppingListComponent implements OnInit {
 
-    ingredients: Ingredient[] = [
-        new Ingredient('Apples', 5),
-        new Ingredient('Tomatoes', 10),
-    ];
+    ingredients: Ingredient[];
 
-    constructor() {
+    constructor(private shoppingListService: ShoppingListService) {
     }
 
-    onAddIngredient(ingredient: Ingredient) {
-        this.ingredients.push(ingredient);
+    ngOnInit() {
+        this.ingredients = this.shoppingListService.getIngredients();
+        this.shoppingListService.ingredientsChanged.subscribe(
+            (ingredients: Ingredient[]) => this.ingredients = ingredients,
+        );
     }
 
-    onDeleteIngredient(ingredientName: string) {
-
-        const ingredientIndex: number = this.ingredients.findIndex((ing: Ingredient) => {
-            return ing.name === ingredientName;
-        });
-
-        if (ingredientIndex < 0) {
-            console.log('Ingredient to delete not found');
-        }
-
-        this.ingredients.splice(ingredientIndex, 1);
+    onDeleteIngredient(name: string) {
+        this.shoppingListService.deleteIngredient(name);
     }
 }
