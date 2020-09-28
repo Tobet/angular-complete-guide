@@ -1,11 +1,12 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import {Ingredient} from '../shared/ingrediente.model';
+import {Subject} from 'rxjs';
 
 @Injectable()
 export class ShoppingListService {
 
-    ingredientsChanged: EventEmitter<Ingredient[]> = new EventEmitter<Ingredient[]>();
+    ingredientsChanged: Subject<Ingredient[]> = new Subject<Ingredient[]>();
 
     private ingredients: Ingredient[] = [
         new Ingredient('Apples', 5),
@@ -22,7 +23,7 @@ export class ShoppingListService {
 
         if (!searchedIngredient) {
             this.ingredients.push(newIngredient);
-            this.ingredientsChanged.emit(this.getIngredients());
+            this.ingredientsChanged.next(this.getIngredients());
         } else {
             searchedIngredient.amount += newIngredient.amount;
             console.log(searchedIngredient.amount);
@@ -42,7 +43,7 @@ export class ShoppingListService {
             }
         });
 
-        this.ingredientsChanged.emit(this.getIngredients());
+        this.ingredientsChanged.next(this.getIngredients());
     }
 
     deleteIngredient(ingredientName: string) {
@@ -56,7 +57,7 @@ export class ShoppingListService {
         }
 
         this.ingredients.splice(ingredientIndex, 1);
-        this.ingredientsChanged.emit(this.getIngredients());
+        this.ingredientsChanged.next(this.getIngredients());
     }
 
     private searchIngredientInsideList(ingredientName: string): Ingredient | undefined {
