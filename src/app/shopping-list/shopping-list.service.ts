@@ -7,6 +7,7 @@ import {Subject} from 'rxjs';
 export class ShoppingListService {
 
     ingredientsChanged: Subject<Ingredient[]> = new Subject<Ingredient[]>();
+    startedEditing: Subject<number> = new Subject<number>();
 
     private ingredients: Ingredient[] = [
         new Ingredient('Apples', 5),
@@ -15,6 +16,10 @@ export class ShoppingListService {
 
     getIngredients() {
         return this.ingredients.slice();
+    }
+
+    getIngredient(index: number) {
+        return this.ingredients[index];
     }
 
     addIngredient(newIngredient: Ingredient) {
@@ -46,17 +51,13 @@ export class ShoppingListService {
         this.ingredientsChanged.next(this.getIngredients());
     }
 
-    deleteIngredient(ingredientName: string) {
+    updateIngredient(index: number, newIngredient: Ingredient) {
+        this.ingredients[index] = newIngredient;
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 
-        const ingredientIndex: number = this.ingredients.findIndex((ing: Ingredient) => {
-            return ing.name === ingredientName;
-        });
-
-        if (ingredientIndex < 0) {
-            console.log('Ingredient to delete not found');
-        }
-
-        this.ingredients.splice(ingredientIndex, 1);
+    deleteIngredient(index: number) {
+        this.ingredients.splice(index, 1);
         this.ingredientsChanged.next(this.getIngredients());
     }
 
