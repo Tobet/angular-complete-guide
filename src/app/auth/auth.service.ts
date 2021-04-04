@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 
 import {User} from './user.model';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 export interface AuthResponseData {
     kind: string,
@@ -24,6 +24,7 @@ export class AuthService {
     private loginUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDvtNeudQ114O-1uy671_ORQ9Cc0C11Z2w';
 
     user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    tokenExpirationTimer: any;
 
     constructor(private http: HttpClient, private router: Router) {
     }
@@ -53,9 +54,43 @@ export class AuthService {
         );
     }
 
+    autoLogin() {
+
+        const userData: {
+            email: string,
+            id: string,
+            _token: string,
+            _tokenExpirationDate: string
+        } = JSON.parse(localStorage.getItem('userData'));
+
+        if (!userData) {
+            return;
+        }
+
+        const loadedUser: User = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
+
+        if (loadedUser.token) {
+            this.user.next(loadedUser);
+            const expirationDuration: number = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+            this.autoLogout(expirationDuration);
+        }
+    }
+
     logout() {
+
         this.user.next(null);
         this.router.navigate(['/auth']);
+        localStorage.removeItem('userData');
+
+        if (this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer);
+        }
+
+        this.tokenExpirationTimer = null;
+    }
+
+    autoLogout(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(() => this.logout(), expirationDuration);
     }
 
     /**
@@ -72,6 +107,8 @@ export class AuthService {
         const user = new User(email, userId, token, expirationDate);
 
         this.user.next(user);
+        this.autoLogout(expiresIn * 1000);
+        localStorage.setItem('userData', JSON.stringify(user));
     }
 
     /**
