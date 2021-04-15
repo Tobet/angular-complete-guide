@@ -2,9 +2,11 @@
 
     <div class="col-xs-12 col-md-6">
 
-        <div *ngIf="error" class="alert alert-danger">
-            <p>{{error}}</p>
-        </div>
+        <!--        <div *ngIf="error" class="alert alert-danger">-->
+        <!--            <p>{{error}}</p>-->
+        <!--        </div>-->
+
+        <app-alert *ngIf="error" [message]="error"></app-alert>
 
         <form *ngIf="!isLoading" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
 
