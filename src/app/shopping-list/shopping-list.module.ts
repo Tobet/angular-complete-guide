@@ -16,7 +16,7 @@ import {ShoppingListEditComponent} from "./shopping-list-edit/shopping-list-edit
         FormsModule,
         RouterModule.forChild([
             {
-                path: 'shopping-list',
+                path: '',
                 component: ShoppingListComponent,
             }
         ])
