@@ -7,6 +7,7 @@ import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from './shopping-list.service';
 
 import {LoggingService} from '../logging.service';
+import * as ShoppingListActions from './shopping-list-edit/store/shopping-list.actions';
 
 @Component({
     selector: 'app-shopping-list',
@@ -16,7 +17,7 @@ import {LoggingService} from '../logging.service';
 export class ShoppingListComponent implements OnInit, OnDestroy {
 
     ingredients: Observable<{ ingredients: Ingredient[] }>;
-    private igChangeSub: Subscription;
+    private sub: Subscription;
 
     constructor(private shoppingListService: ShoppingListService,
                 private loggingService: LoggingService,
@@ -41,10 +42,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
 
     onDeleteIngredient(index: number) {
-        this.shoppingListService.deleteIngredient(index);
+        // this.shoppingListService.deleteIngredient(index);
+        this.store.dispatch(new ShoppingListActions.DeleteIngredient(index));
     }
 
     ngOnDestroy() {
-        // this.igChangeSub.unsubscribe();
+        // this.sub.unsubscribe();
     }
 }
