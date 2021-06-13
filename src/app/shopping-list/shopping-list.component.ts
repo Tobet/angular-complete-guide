@@ -4,11 +4,9 @@ import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 
 import {Ingredient} from '../shared/ingredient.model';
-import {ShoppingListService} from './shopping-list.service';
-
 import {LoggingService} from '../logging.service';
-import * as fromShoppingList from './shopping-list-edit/store/shopping-list.reducer';
-import * as ShoppingListActions from './shopping-list-edit/store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
+import * as ShoppingListActions from './store/shopping-list.actions';
 
 @Component({
     selector: 'app-shopping-list',
@@ -19,9 +17,8 @@ export class ShoppingListComponent implements OnInit {
 
     ingredients: Observable<{ ingredients: Ingredient[] }>;
 
-    constructor(private shoppingListService: ShoppingListService,
-                private loggingService: LoggingService,
-                private store: Store<fromShoppingList.AppState> // generic type that takes an element from map setup on app module (forRoot parameter)
+    constructor(private loggingService: LoggingService,
+                private store: Store<fromApp.AppState> // generic type that takes an element from map setup on app module (forRoot parameter)
     ) {
     }
 
