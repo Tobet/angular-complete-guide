@@ -2,12 +2,15 @@ import {Action} from '@ngrx/store';
 
 import {Ingredient} from '../../shared/ingredient.model';
 
-export const ADD_INGREDIENT = 'ADD_INGREDIENT';
-export const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
-export const UPDATE_INGREDIENT = 'UPDATE_INGREDIENT';
-export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
-export const START_EDIT = 'START_EDIT';
-export const STOP_EDIT = 'STOP_EDIT';
+// prefixing example
+// we have to have uniqur action identifiers across all the application
+// because when we trigger an action, it reaches all the application reducers!
+export const ADD_INGREDIENT = '[Shopping List] [Shopping List] ADD_INGREDIENT';
+export const ADD_INGREDIENTS = '[Shopping List] ADD_INGREDIENTS';
+export const UPDATE_INGREDIENT = '[Shopping List] UPDATE_INGREDIENT';
+export const DELETE_INGREDIENT = '[Shopping List] DELETE_INGREDIENT';
+export const START_EDIT = '[Shopping List] START_EDIT';
+export const STOP_EDIT = '[Shopping List] STOP_EDIT';
 
 export class AddIngredient implements Action {
 
