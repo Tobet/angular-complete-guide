@@ -1,15 +1,13 @@
-import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 import {Store} from '@ngrx/store';
 
 import {User} from './user.model';
-import {environment} from "../../environments/environment";
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
+import {Router} from '@angular/router';
 
 export interface AuthResponseData {
     kind: string,
@@ -24,38 +22,10 @@ export interface AuthResponseData {
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-    private loginUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey;
-    private signupUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey;
-
-    // user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     tokenExpirationTimer: any;
 
-    constructor(private http: HttpClient, private router: Router, private store: Store<fromApp.AppState>) {
-    }
-
-    signup(email: string, password: string): Observable<AuthResponseData> {
-
-        return this.http.post<AuthResponseData>(
-            this.signupUrl,
-            {email: email, password: password, returnSecureToken: true}
-        ).pipe(
-            catchError(this.handleError),
-            tap((resData: AuthResponseData) => {
-                this.handleAuth(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
-            })
-        );
-    }
-
-    login(email: string, password: string): Observable<AuthResponseData> {
-        return this.http.post<AuthResponseData>(
-            this.loginUrl,
-            {email: email, password: password, returnSecureToken: true}
-        ).pipe(
-            catchError(this.handleError),
-            tap((resData: AuthResponseData) => {
-                this.handleAuth(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
-            })
-        );
+    constructor(private store: Store<fromApp.AppState>,
+                private router: Router) {
     }
 
     autoLogin() {
@@ -75,7 +45,7 @@ export class AuthService {
 
         if (loadedUser.token) {
             // this.user.next(loadedUser);
-            this.store.dispatch(new AuthActions.Login({
+            this.store.dispatch(new AuthActions.AuthSuccess({
                 email: loadedUser.email,
                 userId: loadedUser.id,
                 token: loadedUser.token,
@@ -118,7 +88,7 @@ export class AuthService {
         const user = new User(email, userId, token, expirationDate);
 
         // this.user.next(user);
-        this.store.dispatch(new AuthActions.Login({
+        this.store.dispatch(new AuthActions.AuthSuccess({
             email: email,
             userId: userId,
             token: token,
