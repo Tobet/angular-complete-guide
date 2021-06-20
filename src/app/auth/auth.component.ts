@@ -7,14 +7,12 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {Router} from '@angular/router';
 
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
-import {AuthService} from './auth.service';
 import {AlertComponent} from '../shared/alert/alert.component';
 import {PlaceholderDirective} from '../shared/placeholder/placeholder.directive';
 import {AuthState} from './store/auth.reducer';
@@ -34,9 +32,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     private closeSub: Subscription;
     private storeSub: Subscription;
 
-    constructor(private authService: AuthService,
-                private componentFactoryResolver: ComponentFactoryResolver,
-                private router: Router,
+    constructor(private componentFactoryResolver: ComponentFactoryResolver,
                 private store: Store<fromApp.AppState>) {
     }
 
