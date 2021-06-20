@@ -7,6 +7,7 @@ import {Store} from '@ngrx/store';
 import {User} from "./user.model";
 import {AuthService} from "./auth.service";
 import * as fromApp from '../store/app.reducer'
+import {AuthState} from './store/auth.reducer';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -19,7 +20,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
         return this.store.select('auth').pipe(
             take(1),
-            map(authState => {
+            map((authState: AuthState) => {
                 return authState.user;
             }),
             exhaustMap((user: User) => {
@@ -28,7 +29,7 @@ export class AuthInterceptorService implements HttpInterceptor {
                     return next.handle(req);
                 }
 
-                const modifiedRequest = req.clone({params: new HttpParams().set('auth', user.token)})
+                const modifiedRequest: HttpRequest<any> = req.clone({params: new HttpParams().set('auth', user.token)})
                 return next.handle(modifiedRequest);
             })
         )
