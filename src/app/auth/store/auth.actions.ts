@@ -12,7 +12,13 @@ export class AuthSuccess implements Action {
 
     readonly type = AUTH_SUCCESS;
 
-    constructor(public payload: { email: string, userId: string, token: string, expirationDate: Date }) {
+    constructor(public payload: {
+        email: string,
+        userId: string,
+        token: string,
+        expirationDate: Date,
+        redirect: boolean
+    }) {
     }
 }
 

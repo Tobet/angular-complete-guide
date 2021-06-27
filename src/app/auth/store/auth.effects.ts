@@ -11,7 +11,7 @@ import * as AuthActions from './auth.actions';
 import {AuthService} from '../auth.service';
 import {environment} from '../../../environments/environment';
 
- interface AuthResponseData {
+interface AuthResponseData {
     kind: string,
     idToken: string,
     email: string,
@@ -35,7 +35,8 @@ const handleAuth = (expiresIn: number, email: string, userId: string, token: str
         email: email,
         userId: userId,
         token: token,
-        expirationDate: expirationDate
+        expirationDate: expirationDate,
+        redirect: true,
     });
 };
 
@@ -137,7 +138,12 @@ export class AuthEffects {
     @Effect({dispatch: false})
     authRedirect = this.actions$.pipe(
         ofType(AuthActions.AUTH_SUCCESS),
-        tap(() => this.router.navigate(['/']))
+        tap((authSuccessAction: AuthActions.AuthSuccess) => {
+
+            if (authSuccessAction.payload.redirect) {
+                this.router.navigate(['/']);
+            }
+        })
     );
 
     @Effect({dispatch: false})
@@ -146,7 +152,7 @@ export class AuthEffects {
         tap(() => {
             this.authService.clearLogoutTimer();
             localStorage.removeItem('userData');
-            this.router.navigate(['/'])
+            this.router.navigate(['/']);
         })
     );
 
@@ -180,6 +186,7 @@ export class AuthEffects {
                         userId: loadedUser.id,
                         token: loadedUser.token,
                         expirationDate: new Date(userData._tokenExpiration),
+                        redirect: false,
                     }
                 );
 
