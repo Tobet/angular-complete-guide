@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'angular-udemy-course';
+    list = ['Milk', 'Sugar', 'Bread'];
+
+    onAdd(item) {
+        this.list.push(item);
+    }
 }
