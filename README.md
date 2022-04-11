@@ -1,3 +1,8 @@
+Angular app derived from "Angular - The compelte guide" course. (https://www.udemy.com/course/the-complete-guide-to-angular-2/)
+The repo is divided between branches, and every branch is relative to a course module.
+
+The app simulate a food app where the user can add food recipes and also ingredients for every single recipe.
+
 # AngularUdemyCourse
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.4.
