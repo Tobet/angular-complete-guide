@@ -2,7 +2,6 @@ import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 
 import {WelcomeComponent} from "./welcome/welcome.component";
-import {AboutComponent} from "./about/about.component";
 
 const routes: Routes = [
     {
@@ -11,13 +10,14 @@ const routes: Routes = [
     },
     {
         path: 'about',
-        component: AboutComponent
+        // component: AboutComponent // no lazy loading on standalone comp
+        loadComponent: () => import('./about/about.component').then((mod) => mod.AboutComponent)
     },
     {
         path: 'dashboard',
         loadChildren: () =>
-            import('./dashboard/dashboard-routing.module').then(
-                (mod) => mod.DashboardRoutingModule
+            import('./dashboard/routes').then(
+                (mod) => mod.DASH_ROUTES
             )
     }
 ];
